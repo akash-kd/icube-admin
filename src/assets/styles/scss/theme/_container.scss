@@ -1,0 +1,15 @@
+@import "../constants";
+
+.shadow-container {
+  box-shadow: $shadow-card $shadow-black-opacity-10;
+}
+
+.app-bg {
+  background: linear-gradient(0deg, #0f1a2c 0%, #0f1a2c 100%),
+    lightgray 50% / cover no-repeat;
+}
+
+label {
+  font-size: 12px;
+  font-family: $inter;
+}

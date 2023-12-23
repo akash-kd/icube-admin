@@ -1,0 +1,11 @@
+@import "../constants";
+@import "../mixins";
+
+/* Main Theme Colors*/
+
+@include generateThemeClasses("gray", $grey-colors);
+@include generateThemeClasses("yellow", $yellow-colors);
+@include generateThemeClasses("green", $green-colors);
+@include generateThemeClasses("blue", $blue-colors);
+@include generateThemeClasses("purple", $purple-colors);
+@include generateThemeClasses("red", $red-colors);
