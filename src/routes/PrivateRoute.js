@@ -1,20 +1,20 @@
-import React from "react";
-import Dashboard from "../pages/dashboard/index";
+// import React from "react";
+// import Dashboard from "../pages/dashboard/index";
 
-// Authenticated Paths
+// // Authenticated Paths
 
-// Array of routes only a logged in user can access
-const privateRoutes = [
-  {
-    name: 'dashboard',
-    tab: 'dashboard',
-    path: "/dashboard",
-    component: () =>
+// // Array of routes only a logged in user can access
+// const privateRoutes = [
+//   {
+//     name: 'dashboard',
+//     tab: 'dashboard',
+//     path: "/dashboard",
+//     component: () =>
 
-    (
-      <Dashboard />
-    )
-  }
-];
+//     (
+//       <Dashboard />
+//     )
+//   }
+// ];
 
-export { privateRoutes };
+// export { privateRoutes };

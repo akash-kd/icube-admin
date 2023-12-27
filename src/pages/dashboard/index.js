@@ -1,45 +1,27 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     MenuIcon,
     BellIcon,
-    CalendarIcon,
-    ChartPieIcon,
     CogIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
     HomeIcon,
     UsersIcon,
     XIcon,
 } from '@heroicons/react/outline'
 import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
 
-const navigation = [
-    { name: 'All Job', href: '#', icon: HomeIcon, current: true },
-    { name: 'Add Jobs', href: '#', icon: UsersIcon, current: false },
-]
-const teams = [
-    { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-    { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-    { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
+import { JobListingsContainer } from '../../components/util/jobList';
+import { AddJobs } from '../../components/util/addJobs';
+import { UpdateJobs } from '../../components/util/updateJobs';
+
+import { useDispatch, useSelector } from "react-redux";
+import { getAllJobs } from '../../../src/config/APIs/job'
+import { addToList } from '../../redux/job/index'
+import { useNavigate } from 'react-router-dom';
+
 const userNavigation = [
-    { name: 'Your profile', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your profile' },
+    { name: 'Sign out' },
 ]
 
 function classNames(...classes) {
@@ -47,18 +29,61 @@ function classNames(...classes) {
 }
 
 export default function Dashboard() {
+
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const jobs = useSelector(state => state.job);
+    let navigate = useNavigate();
+    const dispatch = useDispatch();
+
+
+    const [navigation, setNavigation] = useState([
+        { name: 'All Job', icon: HomeIcon, component: <JobListingsContainer jobsList={jobs.list} />, current: true },
+        { name: 'Add Jobs', icon: UsersIcon, component: <AddJobs></AddJobs>, current: false },
+        { name: 'Update Jobs', icon: UsersIcon, component: <AddJobs></AddJobs>, current: false },
+    ]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await getAllJobs();
+                dispatch(addToList(res.data));
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData(); // Invoke the fetchData function
+    }, []);
+
+
+
+
+
+    const handleIndex = (index, job) => {
+        setSelectedIndex(index);
+
+        const updatedNavigation = navigation.map((item, i) => ({
+            ...item,
+            current: i === index,
+        }));
+
+        if (index == 2) {
+            console.log(job);
+            updatedNavigation[index].component = <UpdateJobs initialJobData={job} />
+        }
+        setNavigation(updatedNavigation);
+    };
+
+    const handleLogOut = () => {
+        localStorage.removeItem('token');
+        navigate('/auth/signIn');
+    }
+
 
     return (
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
             <div>
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -114,63 +139,43 @@ export default function Dashboard() {
                                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                                 <li>
                                                     <ul role="list" className="-mx-2 space-y-1">
-                                                        {navigation.map((item) => (
-                                                            <li key={item.name}>
-                                                                <a
-                                                                    href={item.href}
-                                                                    className={classNames(
-                                                                        item.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
+                                                        {navigation.map((item, index) => (
+                                                            index !== 1 ? (
+                                                                <div
+                                                                    key={index}
+                                                                    onClick={() => {
+                                                                        if (index !== 2) {
+                                                                            handleIndex(index);
+                                                                        }
+                                                                    }}
                                                                 >
-                                                                    <item.icon
-                                                                        className={classNames(
-                                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
-                                                                            'h-6 w-6 shrink-0'
-                                                                        )}
-                                                                        aria-hidden="true"
-                                                                    />
-                                                                    {item.name}
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? 'bg-gray-50 text-indigo-600'
-                                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                                    )}
-                                                                >
-                                                                    <span
-                                                                        className={classNames(
-                                                                            team.current
-                                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                                        )}
-                                                                    >
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">{team.name}</span>
-                                                                </a>
-                                                            </li>
+                                                                    <li>
+                                                                        <div
+                                                                            className={classNames(
+                                                                                item.current
+                                                                                    ? 'bg-gray-50 text-indigo-600'
+                                                                                    : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                                                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            )}
+                                                                        >
+                                                                            <item.icon
+                                                                                className={classNames(
+                                                                                    item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                                                    'h-6 w-6 shrink-0'
+                                                                                )}
+                                                                                aria-hidden="true"
+                                                                            />
+                                                                            {item.name}
+                                                                        </div>
+                                                                    </li>
+                                                                </div>
+                                                            ) : <div key={index}></div>
                                                         ))}
                                                     </ul>
                                                 </li>
                                                 <li className="mt-auto">
-                                                    <a
-                                                        href="#"
+                                                    <div
+
                                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                                     >
                                                         <CogIcon
@@ -178,7 +183,7 @@ export default function Dashboard() {
                                                             aria-hidden="true"
                                                         />
                                                         Settings
-                                                    </a>
+                                                    </div>
                                                 </li>
                                             </ul>
                                         </nav>
@@ -204,63 +209,44 @@ export default function Dashboard() {
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
                                     <ul role="list" className="-mx-2 space-y-1">
-                                        {navigation.map((item) => (
-                                            <li key={item.name}>
-                                                <a
-                                                    href={item.href}
-                                                    className={classNames(
-                                                        item.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
+                                        {navigation.map((item, index) => (
+                                            index !== 2 ? (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => {
+                                                        if (index !== 2) {
+                                                            handleIndex(index);
+                                                        }
+                                                    }}
                                                 >
-                                                    <item.icon
-                                                        className={classNames(
-                                                            item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
-                                                            'h-6 w-6 shrink-0'
-                                                        )}
-                                                        aria-hidden="true"
-                                                    />
-                                                    {item.name}
-                                                </a>
-                                            </li>
+                                                    <li>
+                                                        <div
+                                                            className={classNames(
+                                                                item.current
+                                                                    ? 'bg-gray-50 text-indigo-600'
+                                                                    : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
+                                                                'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                            )}
+                                                        >
+                                                            <item.icon
+                                                                className={classNames(
+                                                                    item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600',
+                                                                    'h-6 w-6 shrink-0'
+                                                                )}
+                                                                aria-hidden="true"
+                                                            />
+                                                            {item.name}
+                                                        </div>
+                                                    </li>
+                                                </div>
+                                            ) : <div key={index}></div>
                                         ))}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div className="text-xs font-semibold leading-6 text-gray-400">Your teams</div>
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? 'bg-gray-50 text-indigo-600'
-                                                            : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                                    )}
-                                                >
-                                                    <span
-                                                        className={classNames(
-                                                            team.current
-                                                                ? 'text-indigo-600 border-indigo-600'
-                                                                : 'text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                                            'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white'
-                                                        )}
-                                                    >
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
+
                                 <li className="mt-auto">
-                                    <a
-                                        href="#"
+                                    <div
+
                                         className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                                     >
                                         <CogIcon
@@ -268,7 +254,7 @@ export default function Dashboard() {
                                             aria-hidden="true"
                                         />
                                         Settings
-                                    </a>
+                                    </div>
                                 </li>
                             </ul>
                         </nav>
@@ -283,10 +269,10 @@ export default function Dashboard() {
                         </button>
 
                         {/* Separator */}
-                        <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
+                        <div className="h-6 w-px bg-gray-200 lg:hidden border-none" aria-hidden="true" />
 
-                        <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                            <form className="relative flex flex-1" action="#" method="GET">
+                        <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 border-none">
+                            <form className="relative flex flex-1 py-1  border-none" action="#" method="GET">
                                 <label htmlFor="search-field" className="sr-only">
                                     Search
                                 </label>
@@ -296,12 +282,13 @@ export default function Dashboard() {
                                 />
                                 <input
                                     id="search-field"
-                                    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+                                    className="block h-full w-full border-0 py-4 px-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm rounded-full"
                                     placeholder="Search..."
                                     type="search"
                                     name="search"
                                 />
                             </form>
+
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
                                 <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
                                     <span className="sr-only">View notifications</span>
@@ -338,107 +325,37 @@ export default function Dashboard() {
                                     >
                                         <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                                             {userNavigation.map((item) => (
-                                                <Menu.Item key={item.name} >
+                                                <Menu.Item key={item.name}>
                                                     {({ active }) => (
-                                                        <a
-                                                            href={item.href}
+                                                        <div
+                                                            onClick={() => {
+                                                                if (item.name === 'Sign out') {
+                                                                    handleLogOut();
+                                                                }
+                                                            }}
                                                             className={classNames(
                                                                 active ? 'bg-gray-50' : '',
                                                                 'block px-3 py-1 text-sm leading-6 text-gray-900'
                                                             )}
                                                         >
                                                             {item.name}
-                                                        </a>
+                                                        </div>
                                                     )}
                                                 </Menu.Item>
                                             ))}
                                         </Menu.Items>
+
                                     </Transition>
                                 </Menu>
                             </div>
                         </div>
                     </div>
-
-                    <main className="py-5">
-                        <div className="px-4 sm:px-6 lg:px-8 bg-zinc-900">
-                            {/* // editing from here */}
-
-
-                            <div class="container  px-4 mx-auto sm:px-8 ">
-                                <div class="py-8">
-                                    <div class="flex flex-row justify-between w-full mb-1 sm:mb-0">
-                                        <h2 class="text-2xl leading-tight">
-                                            Job
-                                        </h2>
-                                    </div>
-                                    <div class="px-4 py-4 -mx-4 overflow-x-auto bg-slate-500">
-                                        <div class="inline-block w-4/5 overflow-hidden rounded-lg shadow bg-red-400">
-                                            <table class="w-3/4 leading-normal">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col" class=" px-5 py-3 text-sm font-bold text-left text-gray-800 uppercase  bg-white border-b border-gray-200">
-                                                            User
-                                                        </th>
-                                                        <th scope="col" class="px-5 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                                            Role
-                                                        </th>
-                                                        <th scope="col" class="px-5 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                                            Created at
-                                                        </th>
-                                                        <th scope="col" class="px-5 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                                            status
-                                                        </th>
-                                                        <th scope="col" class="px-5 py-3 text-sm font-bold text-left text-gray-800 uppercase bg-white border-b border-gray-200">
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                                            <div class="flex items-center ">
-                                                                <div class="flex-shrink-0 p-3">
-                                                                    <a href="#" class="relative block">
-                                                                        <img alt="profil" src="/images/person/8.jpg" class="mx-auto object-cover rounded-full h-10 w-10 " />
-                                                                    </a>
-                                                                </div>
-                                                                <div class="ml-3">
-                                                                    <p class="text-gray-900 whitespace-no-wrap">
-                                                                        Jean marc
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                                Admin
-                                                            </p>
-                                                        </td>
-                                                        <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                                            <p class="text-gray-900 whitespace-no-wrap">
-                                                                12/09/2020
-                                                            </p>
-                                                        </td>
-                                                        <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                                            <span class="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900">
-                                                                <span aria-hidden="true" class="absolute inset-0 bg-green-200 rounded-full opacity-50">
-                                                                </span>
-                                                                <span class="relative">
-                                                                    active
-                                                                </span>
-                                                            </span>
-                                                        </td>
-                                                        <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                                                            <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                                                Edit
-                                                            </a>
-                                                        </td>
-                                                    </tr>                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                    <main className="py-5 bg-slate-50" >
+                        <div className="px-4 sm:px-6 lg:px-8 ">
+                            {/* // main from here */}
+                            {selectedIndex == 0
+                                ? <JobListingsContainer jobsList={jobs.list} onUpdateIndex={handleIndex} />
+                                : navigation[selectedIndex].component}
                         </div>
                     </main>
                 </div>
