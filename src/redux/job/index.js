@@ -59,11 +59,20 @@ export const Job = createSlice({
 
         },
 
+        setList: (state, action) => {
+            let newList = action.payload.data;
+
+            return {
+                ...state,
+                list: newList
+            }
+        }
+
 
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { addToList, removeFromList, updateList } = Job.actions;
+export const { addToList, removeFromList, updateList, setList } = Job.actions;
 
 export default Job.reducer;

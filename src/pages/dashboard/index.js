@@ -8,16 +8,15 @@ import {
     UsersIcon,
     XIcon,
 } from '@heroicons/react/outline'
-import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
-
+import { ChevronDownIcon } from '@heroicons/react/solid'
 import { JobListingsContainer } from '../../components/util/jobList';
 import { AddJobs } from '../../components/util/addJobs';
 import { UpdateJobs } from '../../components/util/updateJobs';
-
 import { useDispatch, useSelector } from "react-redux";
 import { getAllJobs } from '../../../src/config/APIs/job'
 import { addToList } from '../../redux/job/index'
 import { useNavigate } from 'react-router-dom';
+import { SearchBox } from '../../components/util/searchbox';
 
 const userNavigation = [
     { name: 'Your profile' },
@@ -272,22 +271,8 @@ export default function Dashboard() {
                         <div className="h-6 w-px bg-gray-200 lg:hidden border-none" aria-hidden="true" />
 
                         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6 border-none">
-                            <form className="relative flex flex-1 py-1  border-none" action="#" method="GET">
-                                <label htmlFor="search-field" className="sr-only">
-                                    Search
-                                </label>
-                                <SearchIcon
-                                    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
-                                    aria-hidden="true"
-                                />
-                                <input
-                                    id="search-field"
-                                    className="block h-full w-full border-0 py-4 px-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm rounded-full"
-                                    placeholder="Search..."
-                                    type="search"
-                                    name="search"
-                                />
-                            </form>
+                            <SearchBox />
+
 
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
                                 <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
