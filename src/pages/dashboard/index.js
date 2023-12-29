@@ -19,7 +19,6 @@ import { useNavigate } from 'react-router-dom';
 import { SearchBox } from '../../components/util/searchbox';
 
 const userNavigation = [
-    { name: 'Your profile' },
     { name: 'Sign out' },
 ]
 
@@ -171,18 +170,6 @@ export default function Dashboard() {
                                                         ))}
                                                     </ul>
                                                 </li>
-                                                <li className="mt-auto">
-                                                    <div
-
-                                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
-                                                    >
-                                                        <CogIcon
-                                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                                            aria-hidden="true"
-                                                        />
-                                                        Settings
-                                                    </div>
-                                                </li>
                                             </ul>
                                         </nav>
                                     </div>
@@ -241,19 +228,6 @@ export default function Dashboard() {
                                         ))}
                                     </ul>
                                 </li>
-
-                                <li className="mt-auto">
-                                    <div
-
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
-                                    >
-                                        <CogIcon
-                                            className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-indigo-600"
-                                            aria-hidden="true"
-                                        />
-                                        Settings
-                                    </div>
-                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -293,7 +267,7 @@ export default function Dashboard() {
                                         />
                                         <span className="hidden lg:flex lg:items-center">
                                             <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                                                Tom Cook
+                                                Admin
                                             </span>
                                             <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </span>

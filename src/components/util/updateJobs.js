@@ -7,6 +7,7 @@ export const UpdateJobs = ({ initialJobData }) => {
 
 
     const [jobData, setJobData] = useState(initialJobData);
+    const [successMessage, setSuccessMessage] = useState('');
     const dispatch = useDispatch();
 
 
@@ -25,6 +26,7 @@ export const UpdateJobs = ({ initialJobData }) => {
 
             const res = await updateAJobs(jobData._id, jobData);
             dispatch(updateList(res.data));
+            setSuccessMessage('Job updated successfully');
         }
         catch (e) {
             console.log("The error is " + e);
@@ -36,6 +38,11 @@ export const UpdateJobs = ({ initialJobData }) => {
 
             <div className=" mt-2 w-3/5 p-6  bg-white rounded-md shadow-md">
                 <h2 className="text-2xl font-bold leading-tight">Update Job</h2>
+                {successMessage && (
+                    <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-4">
+                        <p>{successMessage}</p>
+                    </div>
+                )}
                 <form className="mt-4 space-y-6 my-4" onSubmit={handleSubmit}>
                     {/* Title */}
                     <div>
