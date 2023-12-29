@@ -33,7 +33,6 @@ export const Job = createSlice({
         },
         removeFromList: (state, action) => {
             let id = action.payload;
-            console.log(action.payload);
             const newList = state.list.filter((obj) => obj._id !== id);
 
             return {
@@ -45,8 +44,6 @@ export const Job = createSlice({
         },
         updateList: (state, action) => {
             let updatedJob = action.payload.data;
-            console.log('reducer');
-            console.log(updatedJob);
 
             const newList = state.list.map((obj) =>
                 obj._id === updatedJob._id ? updatedJob : obj

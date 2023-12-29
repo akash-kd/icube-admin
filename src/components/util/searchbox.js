@@ -14,7 +14,7 @@ export const SearchBox = () => {
             const res = await getAllJobs(searchValue);
             dispatch(setList(res.data));
 
-            console.log(res);
+
         } catch (error) {
             console.error('Error fetching data:', error);
         }

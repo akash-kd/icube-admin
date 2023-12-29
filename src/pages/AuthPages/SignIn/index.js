@@ -10,7 +10,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function SignIn() {
 
-  useEffect(() => { console.log('It is loading') }, []);
   let navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -26,9 +25,10 @@ export default function SignIn() {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(credentials);
     let res = '';
     try {
       res = await loginWithEmailAndPassword(credentials);
@@ -39,8 +39,8 @@ export default function SignIn() {
     }
     catch (e) {
       console.log(e);
+      setShowErrorMessage(true);
     }
-    console.log(res);
 
   };
 
@@ -107,11 +107,11 @@ export default function SignIn() {
                 </label>
               </div>
 
-              <div className="text-sm leading-6">
+              {/* <div className="text-sm leading-6">
                 <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
                   Forgot password?
                 </a>
-              </div>
+              </div> */}
             </div>
 
             <div>
@@ -123,6 +123,12 @@ export default function SignIn() {
               </button>
             </div>
           </form>
+
+          {showErrorMessage && (
+            <p className="mt-4 text-center text-sm text-red-500">
+              Incorrect email or password. Please try again.
+            </p>
+          )}
 
           <p className="mt-4 text-center text-sm text-gray-500">
             Don't have an account?{' '}

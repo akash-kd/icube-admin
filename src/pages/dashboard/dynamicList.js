@@ -13,7 +13,6 @@ export const DynamicList = ({ item, ontap }) => {
             let res = await deleteAJobs(id);
 
             dispatch(removeFromList(id));
-            console.log(res);
 
         }
         catch (e) {

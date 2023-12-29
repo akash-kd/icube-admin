@@ -33,7 +33,6 @@ export const AddJobs = () => {
 
             const res = await createAJobs(jobData);
             dispatch(addToList(res.data));
-            console.log(res);
             setJobData(initialJobData);
         }
         catch (e) {

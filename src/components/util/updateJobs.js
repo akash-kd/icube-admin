@@ -25,8 +25,6 @@ export const UpdateJobs = ({ initialJobData }) => {
 
             const res = await updateAJobs(jobData._id, jobData);
             dispatch(updateList(res.data));
-            console.log('in api call')
-            console.log(res);
         }
         catch (e) {
             console.log("The error is " + e);

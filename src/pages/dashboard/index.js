@@ -69,7 +69,6 @@ export default function Dashboard() {
         }));
 
         if (index == 2) {
-            console.log(job);
             updatedNavigation[index].component = <UpdateJobs initialJobData={job} />
         }
         setNavigation(updatedNavigation);

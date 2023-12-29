@@ -9,7 +9,6 @@ export function AuthenticatedRedirects({ children, route }) {
   React.useEffect(() => {
 
     if (!isAuthenticated) {
-      console.log('Redirecting to:', route);
       navigate(route);
     }
     else {

@@ -12,7 +12,6 @@ export const toasterSlice = createSlice({
   initialState,
   reducers: {
     showToast: (state, action) => {
-      console.log(action.payload);
       let msg = action.payload.message || "Something went wrong!";
       let type = action.payload?.type;
       if (type == "error") {

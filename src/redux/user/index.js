@@ -11,7 +11,6 @@ export const User = createSlice({
   initialState,
   reducers: {
     userUpdate: (state, action) => {
-      console.log(action.payload);
       if (action.payload?.data) {
         let u = action.payload?.data;
         state.user = u;
@@ -20,7 +19,6 @@ export const User = createSlice({
         let t = action.payload?.data.token;
         state.token = t;
         localStorage.setItem("token", t);
-        console.log(t);
       }
     },
   },

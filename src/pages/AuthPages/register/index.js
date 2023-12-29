@@ -19,13 +19,14 @@ export default function SignUp() {
         password: '',
     });
 
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+
     const handleInputChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        console.log(credentials);
         let res = '';
         try {
             res = await signUpWithEmailAndPassword(credentials);
@@ -34,8 +35,8 @@ export default function SignUp() {
         }
         catch (e) {
             console.log(e);
+            setShowErrorMessage(true);
         }
-        console.log(res);
 
     };
 
@@ -103,11 +104,11 @@ export default function SignUp() {
                                 </label>
                             </div>
 
-                            <div className="text-sm leading-6">
+                            {/* <div className="text-sm leading-6">
                                 <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
                                     Forgot password?
                                 </a>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div>
@@ -119,6 +120,12 @@ export default function SignUp() {
                             </button>
                         </div>
                     </form>
+
+                    {showErrorMessage && (
+                        <p className="mt-4 text-center text-sm text-red-500">
+                            Something went wrong. Please try again
+                        </p>
+                    )}
 
                     <p className="mt-4 text-center text-sm text-gray-500">
                         Don't have an account?{' '}
