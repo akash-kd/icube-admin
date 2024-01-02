@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from 'react';
@@ -11,6 +11,7 @@ import { signUpWithEmailAndPassword } from '../../../config/APIs/auth'
 export default function SignUp() {
 
     const dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const user = useSelector(state => state.user);
 
@@ -32,6 +33,7 @@ export default function SignUp() {
             res = await signUpWithEmailAndPassword(credentials);
 
             dispatch(userUpdate(res));
+            navigate('/dashboard');
         }
         catch (e) {
             console.log(e);
@@ -116,7 +118,7 @@ export default function SignUp() {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign in
+                                Sign up
                             </button>
                         </div>
                     </form>
@@ -128,12 +130,12 @@ export default function SignUp() {
                     )}
 
                     <p className="mt-4 text-center text-sm text-gray-500">
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         <Link
                             to="/auth/signIn"
                             className="font-semibold text-indigo-600 hover:text-indigo-500"
                         >
-                            Sign up here
+                            Sign in here
                         </Link>
                     </p>
                 </div>
