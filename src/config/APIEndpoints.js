@@ -4,7 +4,7 @@ let ENDPOINT = "";
 switch (process.env.REACT_APP_DEVELOPMENT_TYPE) {
   case "production":
     // Endpoint for Production website
-    ENDPOINT = "https://caaryame-backend-tk4gwh76qa-el.a.run.app";
+    ENDPOINT = "http://api.icubetechnologyinc.com";
     break;
 
   case "local":

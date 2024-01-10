@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from 'react';
@@ -11,6 +11,7 @@ import { signUpWithEmailAndPassword } from '../../../config/APIs/auth'
 export default function SignUp() {
 
     const dispatch = useDispatch();
+    let navigate = useNavigate();
 
     const user = useSelector(state => state.user);
 
@@ -19,23 +20,25 @@ export default function SignUp() {
         password: '',
     });
 
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
+
     const handleInputChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        console.log(credentials);
         let res = '';
         try {
             res = await signUpWithEmailAndPassword(credentials);
 
             dispatch(userUpdate(res));
+            navigate('/dashboard');
         }
         catch (e) {
             console.log(e);
+            setShowErrorMessage(true);
         }
-        console.log(res);
 
     };
 
@@ -48,7 +51,7 @@ export default function SignUp() {
                     <div>
                         <img
                             className="mx-auto h-10 w-auto"
-                            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                            src="https://i.ibb.co/7WFQvbY/android-chrome-192x192.png"
                             alt="Your Company"
                         />
                         <h2 className="mt-6 text-center text-2xl font-bold leading-9 text-gray-900">
@@ -103,11 +106,11 @@ export default function SignUp() {
                                 </label>
                             </div>
 
-                            <div className="text-sm leading-6">
+                            {/* <div className="text-sm leading-6">
                                 <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
                                     Forgot password?
                                 </a>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div>
@@ -115,18 +118,24 @@ export default function SignUp() {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign in
+                                Sign up
                             </button>
                         </div>
                     </form>
 
+                    {showErrorMessage && (
+                        <p className="mt-4 text-center text-sm text-red-500">
+                            Something went wrong. Please try again
+                        </p>
+                    )}
+
                     <p className="mt-4 text-center text-sm text-gray-500">
-                        Don't have an account?{' '}
+                        Already have an account?{' '}
                         <Link
                             to="/auth/signIn"
                             className="font-semibold text-indigo-600 hover:text-indigo-500"
                         >
-                            Sign up here
+                            Sign in here
                         </Link>
                     </p>
                 </div>

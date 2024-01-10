@@ -1,7 +1,7 @@
 import { getHeader, Instance } from "../index";
 
 export const getAllJobs = (query = {}) => {
-  return Instance.get(`/jobs`, getHeader());
+  return Instance.get(`/jobs?title=${query}`, getHeader());
 };
 
 export const getAJobs = (id) => {
@@ -13,7 +13,7 @@ export const deleteAJobs = (id) => {
 };
 
 export const updateAJobs = (id, body) => {
-  return Instance.patch(`/jobs/${id}`, body, getHeader());
+  return Instance.put(`/jobs/${id}`, body, getHeader());
 };
 
 export const createAJobs = (body) => {
