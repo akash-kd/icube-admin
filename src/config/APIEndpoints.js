@@ -4,7 +4,7 @@ let ENDPOINT = "";
 switch (process.env.REACT_APP_DEVELOPMENT_TYPE) {
   case "production":
     // Endpoint for Production website
-    ENDPOINT = "http://139.59.95.250:3001";
+    ENDPOINT = "http://api.icubetechnologyinc.com";
     break;
 
   case "local":
