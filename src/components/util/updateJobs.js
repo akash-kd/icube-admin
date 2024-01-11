@@ -3,7 +3,7 @@ import { updateAJobs } from '../../config/APIs/job';
 import { useDispatch } from "react-redux";
 import { updateList } from '../../redux/job/index'
 
-export const UpdateJobs = ({ initialJobData }) => {
+export const UpdateJobs = ({ initialJobData, onSubmit }) => {
 
 
     const [jobData, setJobData] = useState(initialJobData);
@@ -27,6 +27,7 @@ export const UpdateJobs = ({ initialJobData }) => {
             const res = await updateAJobs(jobData._id, jobData);
             dispatch(updateList(res.data));
             setSuccessMessage('Job updated successfully');
+            onSubmit(0);
         }
         catch (e) {
             console.log("The error is " + e);

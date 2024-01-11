@@ -3,7 +3,7 @@ import { createAJobs } from '../../config/APIs/job';
 import { useDispatch } from "react-redux";
 import { addToList } from '../../redux/job/index'
 
-export const AddJobs = () => {
+export const AddJobs = ({ onSubmit }) => {
     const initialJobData = {
         title: '',
         description: '',
@@ -11,7 +11,7 @@ export const AddJobs = () => {
         duties: '',
         requirements: '',
         mailResumeTo: '',
-        archived: true,
+        archived: false,
     };
 
     const [jobData, setJobData] = useState(initialJobData);
@@ -36,6 +36,7 @@ export const AddJobs = () => {
             dispatch(addToList(res.data));
             setJobData(initialJobData);
             setSuccessMessage('Job Created successfully');
+            onSubmit(0);
         }
         catch (e) {
             console.log("The error is " + e);
