@@ -55,6 +55,7 @@ export default function SignIn() {
               src="https://i.ibb.co/7WFQvbY/android-chrome-192x192.png"
               alt="Your Company"
             />
+            <div className="mt-2 text-center font-semibold">iCube Technologies</div>
             <h2 className="mt-6 text-center text-2xl font-bold leading-9 text-gray-900">
               Sign in to your account
             </h2>
